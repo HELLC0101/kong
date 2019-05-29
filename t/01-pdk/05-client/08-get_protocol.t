@@ -47,7 +47,6 @@ protocol=https
 
             local PDK = require "kong.pdk"
             local pdk = PDK.new()
-            _G.kong = pdk
             ngx.say("protocol=", assert(pdk.client.get_protocol()))
         }
     }
@@ -71,9 +70,6 @@ qq{
         ssl_certificate_key $ENV{TEST_NGINX_CERT_DIR}/test.key;
 
         location / {
-            content_by_lua_block {
-            }
-
             access_by_lua_block {
                 ngx.ctx.route = {
                   protocols = { "http", "https" }
@@ -81,8 +77,6 @@ qq{
 
                 local PDK = require "kong.pdk"
                 local pdk = PDK.new()
-                _G.kong = pdk
-
                 ngx.say("protocol=", assert(pdk.client.get_protocol()))
             }
         }
@@ -113,7 +107,6 @@ protocol=https
 
             local PDK = require "kong.pdk"
             local pdk = PDK.new()
-            _G.kong = pdk
             pdk.ip.is_trusted = function() return true end -- mock
             ngx.say("protocol=", assert(pdk.client.get_protocol(true)))
         }
@@ -140,7 +133,6 @@ protocol=https
 
             local PDK = require "kong.pdk"
             local pdk = PDK.new()
-            _G.kong = pdk
             pdk.ip.is_trusted = function() return true end -- mock
             ngx.say("protocol=", assert(pdk.client.get_protocol(false))) -- was true
         }
@@ -168,7 +160,6 @@ protocol=http
 
             local PDK = require "kong.pdk"
             local pdk = PDK.new()
-            _G.kong = pdk
             pdk.ip.is_trusted = function() return false end -- mock, was true
             ngx.say("protocol=", assert(pdk.client.get_protocol(true)))
         }
@@ -196,7 +187,6 @@ protocol=http
 
             local PDK = require "kong.pdk"
             local pdk = PDK.new()
-            _G.kong = pdk
             pdk.ip.is_trusted = function() return true end -- mock
             ngx.say("protocol=", assert(pdk.client.get_protocol(true)))
         }
@@ -223,7 +213,6 @@ protocol=http
 
             local PDK = require "kong.pdk"
             local pdk = PDK.new()
-            _G.kong = pdk
             pdk.ip.is_trusted = function() return true end -- mock
             ngx.say("protocol=", assert(pdk.client.get_protocol(true)))
         }
